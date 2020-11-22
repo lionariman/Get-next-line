@@ -6,40 +6,27 @@
 /*   By: keuclide <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 18:38:28 by keuclide          #+#    #+#             */
-/*   Updated: 2020/11/20 12:05:23 by keuclide         ###   ########.fr       */
+/*   Updated: 2020/11/22 19:15:00 by keuclide         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void			ft_strcpy(char *d, char *s)
+int				check_count(int fd, char **line, char **rem, char *n)
 {
-	int			i;
-
-	i = 0;
-	while (s[i])
-	{
-		d[i] = s[i];
-		i++;
-	}
-	d[i] = '\0';
-}
-
-int				qnl(int fd, char *buff, char **line, char **rem)
-{
+	static char	buff[BUFFER_SIZE + 1];
 	char		*tmp;
-	char		*n;
 	int			count;
 
-	n = NULL;
-	while (n == NULL && (count = read(fd, buff, BUFF_SIZE)) > 0)
+	while (n == NULL && (count = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
+		if (count == -1)
+			return (-1);
 		buff[count] = '\0';
-		if ((n = ft_strchr(buff, '\n')) != NULL)
+		if ((n = ft_strchr(buff, '\n')))
 		{
 			*n = '\0';
-			n++;
-			*rem = ft_strdup(n);
+			*rem = ft_strdup(++n);
 		}
 		tmp = *line;
 		*line = ft_strjoin(*line, buff);
@@ -50,7 +37,7 @@ int				qnl(int fd, char *buff, char **line, char **rem)
 
 char			*check_rem(char **line, char **rem)
 {
-	char		*n;
+	char		*n;	
 
 	n = NULL;
 	if (*rem != NULL)
@@ -58,14 +45,13 @@ char			*check_rem(char **line, char **rem)
 		if ((n = ft_strchr(*rem, '\n')))
 		{
 			*n = '\0';
-			*line = ft_strdup(*rem);
-			n++;
-			ft_strcpy(*rem, n);
+			*line = *rem;
+			*rem = ft_strdup(++n);
 		}
 		else
 		{
-			*line = ft_strdup(*rem);
-			free(*rem);
+			*line = *rem;
+			*rem = NULL;
 		}
 	}
 	else
@@ -75,14 +61,18 @@ char			*check_rem(char **line, char **rem)
 
 int				get_next_line(int fd, char **line)
 {
-	char		buff[BUFF_SIZE + 1];
 	static char	*rem;
+	char		*n;
 	int			count;
 
-	if (check_rem(line, &rem) == NULL)
-		count = qnl(fd, buff, line, &rem);
-	if (ft_strlen(*line) || count)
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
+		return (-1);
+	if ((n = check_rem(line, &rem)) == NULL)
+	{
+		if ((count = check_count(fd, line, &rem, n)) < 0)
+			return(-1);
+	}
+	if (rem || count)
 		return (1);
-	else
-		return (0);
+	return (0);
 }
