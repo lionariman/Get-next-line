@@ -6,16 +6,17 @@
 /*   By: keuclide <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 18:39:49 by keuclide          #+#    #+#             */
-/*   Updated: 2020/11/22 19:06:31 by keuclide         ###   ########.fr       */
+/*   Updated: 2020/11/23 14:04:32 by keuclide         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
 
 int		get_next_line(int fd, char **line);
 size_t	ft_strlen(const char *s);

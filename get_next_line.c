@@ -6,18 +6,19 @@
 /*   By: keuclide <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 18:38:28 by keuclide          #+#    #+#             */
-/*   Updated: 2020/11/22 19:15:00 by keuclide         ###   ########.fr       */
+/*   Updated: 2020/11/23 15:00:11 by keuclide         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int				check_count(int fd, char **line, char **rem, char *n)
+int				check_count(int fd, char **line, char **rem, char *buff)
 {
-	static char	buff[BUFFER_SIZE + 1];
 	char		*tmp;
+	char		*n;
 	int			count;
 
+	n = NULL;
 	while (n == NULL && (count = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
 		if (count == -1)
@@ -37,7 +38,7 @@ int				check_count(int fd, char **line, char **rem, char *n)
 
 char			*check_rem(char **line, char **rem)
 {
-	char		*n;	
+	char		*n;
 
 	n = NULL;
 	if (*rem != NULL)
@@ -62,16 +63,24 @@ char			*check_rem(char **line, char **rem)
 int				get_next_line(int fd, char **line)
 {
 	static char	*rem;
-	char		*n;
+	char		*buff;
 	int			count;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	if ((n = check_rem(line, &rem)) == NULL)
+	if (!(buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+		return (-1);
+	if ((count = read(fd, buff, 0)) == -1)
 	{
-		if ((count = check_count(fd, line, &rem, n)) < 0)
-			return(-1);
+		free(buff);
+		return (-1);
 	}
+	if (!(check_rem(line, &rem)))
+	{
+		if ((count = check_count(fd, line, &rem, buff)) < 0)
+			return (-1);
+	}
+	free(buff);
 	if (rem || count)
 		return (1);
 	return (0);
