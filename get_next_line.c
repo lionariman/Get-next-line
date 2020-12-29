@@ -6,7 +6,7 @@
 /*   By: keuclide <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 18:38:28 by keuclide          #+#    #+#             */
-/*   Updated: 2020/11/23 15:00:11 by keuclide         ###   ########.fr       */
+/*   Updated: 2020/12/29 19:06:45 by keuclide         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,8 @@ int				get_next_line(int fd, char **line)
 		return (-1);
 	}
 	if (!(check_rem(line, &rem)))
-	{
 		if ((count = check_count(fd, line, &rem, buff)) < 0)
 			return (-1);
-	}
 	free(buff);
 	if (rem || count)
 		return (1);
