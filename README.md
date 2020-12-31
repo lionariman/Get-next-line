@@ -22,6 +22,6 @@ Run the following commands:
 	- `make re`
 
 **Return value:**
-return 1 when it read a line
-return 0 when it finished reading a file
-return -1 when an error occurs
+* return 1 when it read a line
+* return 0 when it finished reading a file
+* return -1 when an error occurs
